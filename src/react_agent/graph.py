@@ -1,6 +1,6 @@
-"""Define a custom Reasoning and Action agent.
+"""Define a custom Reasoning and Action agent with web search capabilities.
 
-Works with a chat model with tool calling support.
+Works with a chat model with tool calling support and integrates with Tavily for web search.
 """
 
 from datetime import UTC, datetime

@@ -16,11 +16,20 @@ The ReAct agent:
 
 1. Takes a user **query** as input
 2. Reasons about the query and decides on an action
-3. Executes the chosen action using available tools
+3. Executes the chosen action using available tools (including web search)
 4. Observes the result of the action
 5. Repeats steps 2-4 until it can provide a final answer
 
-By default, it's set up with a basic set of tools, but can be easily extended with custom tools to suit various use cases.
+By default, it's set up with web search capabilities using the Tavily API, but can be easily extended with additional custom tools to suit various use cases.
+
+### Web Search Functionality
+
+The agent can search the web for up-to-date information using the Tavily search API. This is particularly useful for:
+- Answering questions about current events
+- Finding factual information
+- Researching topics that may have changed since the model's training data cutoff
+
+When a user asks a question that requires current information, the agent will automatically use the search tool to find relevant information online.
 
 ## Getting Started
 
@@ -102,6 +111,18 @@ Follow up requests will be appended to the same thread. You can create an entire
 You can find the latest (under construction) docs on [LangGraph](https://github.com/langchain-ai/langgraph) here, including examples and other references. Using those guides can help you pick the right patterns to adapt here for your use case.
 
 LangGraph Studio also integrates with [LangSmith](https://smith.langchain.com/) for more in-depth tracing and collaboration with teammates.
+
+### Conda Environment Activation
+
+This project is configured to automatically activate the 'langgraph' conda environment when running 'augment shell'. To set up this environment:
+
+```bash
+conda create -n langgraph python=3.10
+conda activate langgraph
+pip install -r requirements.txt
+```
+
+The activation script is located in `.augment/activate_env.sh` and will be executed automatically when you run `augment shell` in this project.
 
 [^1]: https://python.langchain.com/docs/concepts/#tools
 
