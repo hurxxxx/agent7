@@ -6,9 +6,9 @@ These tools are integrated with LangGraph to provide the agent with the ability
 to search the web for information.
 """
 
-from typing import Any, Callable, Dict, List, Optional, cast
+from typing import Any, Callable, Dict, List, Optional
 
-from langchain_tavily import TavilySearch, TavilySearchResults  # type: ignore[import-not-found]
+from langchain_tavily import TavilySearch  # type: ignore[import-not-found]
 
 from react_agent.configuration import Configuration
 
@@ -27,8 +27,18 @@ async def search(query: str) -> Optional[Dict[str, Any]]:
         A dictionary containing search results or None if the search failed.
     """
     configuration = Configuration.from_context()
-    wrapped = TavilySearch(max_results=configuration.max_search_results)
-    results: TavilySearchResults = await wrapped.ainvoke({"query": query})
+
+    # Create a TavilySearch instance with standard configuration
+    search_tool = TavilySearch(
+        max_results=configuration.max_search_results,
+        include_answer=True,
+        include_raw_content=True,
+        include_images=True,
+        api_key=configuration.tavily_api_key,
+    )
+
+    # Invoke the search tool with the query
+    results = await search_tool.ainvoke({"query": query})
 
     # Update the state with search results
     return {
