@@ -8,7 +8,7 @@ to search the web for information.
 
 from typing import Any, Callable, Dict, List, Optional, cast
 
-from langchain_tavily import TavilySearch  # type: ignore[import-not-found]
+from langchain_tavily import TavilySearch, TavilySearchResults  # type: ignore[import-not-found]
 
 from react_agent.configuration import Configuration
 
@@ -28,7 +28,7 @@ async def search(query: str) -> Optional[Dict[str, Any]]:
     """
     configuration = Configuration.from_context()
     wrapped = TavilySearch(max_results=configuration.max_search_results)
-    results = cast(Dict[str, Any], await wrapped.ainvoke({"query": query}))
+    results: TavilySearchResults = await wrapped.ainvoke({"query": query})
 
     # Update the state with search results
     return {
