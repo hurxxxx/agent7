@@ -24,5 +24,10 @@ async def search(query: str) -> Optional[dict[str, Any]]:
     wrapped = TavilySearch(max_results=configuration.max_search_results)
     return cast(dict[str, Any], await wrapped.ainvoke({"query": query}))
 
+async def jokeMaker(query: str) -> Optional[dict[str, Any]]:
+    """Generate a joke based on the input query."""
+    return {"joke": f"Why did the {query} go to the therapist? Because it had its own issues!"}
 
-TOOLS: List[Callable[..., Any]] = [search]
+
+
+TOOLS: List[Callable[..., Any]] = [search, jokeMaker]
