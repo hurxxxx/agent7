@@ -2,9 +2,8 @@
 
 from __future__ import annotations
 
-import os
 from dataclasses import dataclass, field, fields
-from typing import Annotated, Optional
+from typing import Annotated
 
 from langchain_core.runnables import ensure_config
 from langgraph.config import get_config
@@ -39,14 +38,6 @@ class Configuration:
         },
     )
 
-    tavily_api_key: Optional[str] = field(
-        default=None,
-        metadata={
-            "description": "The API key for the Tavily search engine. "
-            "If not provided, it will be loaded from the TAVILY_API_KEY environment variable."
-        },
-    )
-
     @classmethod
     def from_context(cls) -> Configuration:
         """Create a Configuration instance from a RunnableConfig object."""
@@ -56,13 +47,5 @@ class Configuration:
             config = None
         config = ensure_config(config)
         configurable = config.get("configurable") or {}
-
-        # Create a configuration instance
         _fields = {f.name for f in fields(cls) if f.init}
-        instance = cls(**{k: v for k, v in configurable.items() if k in _fields})
-
-        # Set Tavily API key from environment if not provided
-        if instance.tavily_api_key is None:
-            instance.tavily_api_key = os.environ.get("TAVILY_API_KEY")
-
-        return instance
+        return cls(**{k: v for k, v in configurable.items() if k in _fields})

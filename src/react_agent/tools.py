@@ -1,57 +1,28 @@
-"""This module provides tools for web scraping and search functionality.
+"""This module provides example tools for web scraping and search functionality.
 
-It includes a Tavily search function for web search capabilities.
+It includes a basic Tavily search function (as an example)
 
-These tools are integrated with LangGraph to provide the agent with the ability
-to search the web for information.
+These tools are intended as free examples to get started. For production use,
+consider implementing more robust and specialized tools tailored to your needs.
 """
 
-from typing import Any, Callable, Dict, List, Optional
+from typing import Any, Callable, List, Optional, cast
 
 from langchain_tavily import TavilySearch  # type: ignore[import-not-found]
 
 from react_agent.configuration import Configuration
 
 
-async def search(query: str) -> Optional[Dict[str, Any]]:
+async def search(query: str) -> Optional[dict[str, Any]]:
     """Search for general web results.
 
     This function performs a search using the Tavily search engine, which is designed
     to provide comprehensive, accurate, and trusted results. It's particularly useful
-    for answering questions about current events, facts, and general information.
-
-    Args:
-        query: The search query string.
-
-    Returns:
-        A dictionary containing search results or None if the search failed.
+    for answering questions about current events.
     """
     configuration = Configuration.from_context()
-
-    # Create a TavilySearch instance with standard configuration
-    search_tool = TavilySearch(
-        max_results=configuration.max_search_results,
-        include_answer=True,
-        include_raw_content=True,
-        include_images=True,
-        api_key=configuration.tavily_api_key,
-    )
-
-    # Invoke the search tool with the query
-    results = await search_tool.ainvoke({"query": query})
-
-    # Update the state with search results
-    return {
-        "search_results": results,
-        "messages": [
-            {
-                "role": "tool",
-                "tool_call_id": None,  # This will be filled in by the framework
-                "name": "search",
-                "content": str(results),
-            }
-        ],
-    }
+    wrapped = TavilySearch(max_results=configuration.max_search_results)
+    return cast(dict[str, Any], await wrapped.ainvoke({"query": query}))
 
 
 TOOLS: List[Callable[..., Any]] = [search]
