@@ -1,7 +1,11 @@
 {
-  "dependencies": ["."],
+  "dependencies": [
+    "."
+  ],
   "graphs": {
-    "agent": "./src/react_agent/graph.py:graph"
+    "agent": "./src/react_agent/graph.py:graph",
+    "open_deep_research": "./src/open_deep_research/graph.py:graph",
+    "open_deep_research_multi_agent": "./src/open_deep_research/multi_agent.py:graph"
   },
   "env": ".env"
 }
